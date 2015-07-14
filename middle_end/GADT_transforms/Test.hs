@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-unused-imports #-}
 
 module Test where
 
@@ -5,6 +6,7 @@ import AST
 import Type
 import Pretty ()
 import Array.Sugar
+import Substitution
 import Interpreter
 
 
@@ -44,6 +46,9 @@ f1 = Lam $ Body $ PrimApp (PrimAdd (IntegralNumType (TypeInt IntegralDict)))
 
 f2 :: OpenFun env aenv (Int -> Float)
 f2 = Lam $ Body $ PrimApp PrimToFloat (Var ZeroIdx)
+
+f3 :: OpenFun env aenv (Int -> Float)
+f3 = f2 `compose` f1
 
 
 -- Scalar expressions
