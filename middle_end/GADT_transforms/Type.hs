@@ -1,6 +1,6 @@
 {-# LANGUAGE GADTs #-}
 
--- Type hierarchy
+-- | Type hierarchy
 --
 module Type where
 
@@ -83,4 +83,3 @@ ppTypeR = tupled . go
     go (TypeRsnoc TypeRzero     b@TypeRsnoc{})  = [ tup (go b) ]                -- 'b' is terminated at this point
     go (TypeRsnoc a@TypeRsnoc{} b@TypeRsnoc{})  = [ tup (go a), tup (go b) ]    -- meet point of a pair of tuples
     go (TypeRsnoc a b)                          = go a ++ go b
-

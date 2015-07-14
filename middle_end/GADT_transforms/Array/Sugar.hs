@@ -8,6 +8,8 @@
 {-# LANGUAGE TypeOperators        #-}
 {-# LANGUAGE UndecidableInstances #-}
 
+-- | Mapping idiomatic Haskell types onto (unzipped) mini-accelerate Arrays
+
 module Array.Sugar where
 
 import Type
@@ -233,4 +235,3 @@ instance (Elt a, Elt b, Elt c, Elt d) => IsProduct (a, b, c, d) where
   fromProd (a, b, c, d) = (fromProd (a,b,c), d)
   toProd (abc, d)       = let (a, b, c) = toProd abc in (a, b, c, d)
   prodR _               = ProdRsnoc (prodR (undefined :: (a,b,c)))
-

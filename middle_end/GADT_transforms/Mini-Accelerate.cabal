@@ -15,5 +15,6 @@ library
     , ghc-prim
     , deepseq
     , vector            >= 0.10
+    , split
 
 --  ghc-options:          -Wall -O2
