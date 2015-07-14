@@ -1,15 +1,32 @@
 {-# LANGUAGE TemplateHaskell #-}
-        -- |
 
-module Quotes where
+{-|
+
+See wiki entry here:
+
+  https://wiki.haskell.org/Template_Haskell#What_is_Template_Haskell.3F
+
+This is a tiny example of how to use template Haskell.
+
+ -}
+
+module Main where
 
 import Language.Haskell.TH
+import TemplateHaskell1
 
-foo :: Q Exp
-foo  = [| \n -> show n |]
+-- The simplest thing we can do with something of type `Q Exp` is to
+-- splice it in.
+bar :: Int -> String
+bar = $(foo)
 
-baz :: Q (TExp Int)
-baz = [||  3 + 3  ||]
+-- To splice in a typed quotation we use a slightly different syntax:
+quux :: Int
+quux = $$baz
+
+main :: IO ()
+main = print "hi"
+
 
 -- 22 case Exps in TH
 --  (Versus 52 for haskell-src-ext)
