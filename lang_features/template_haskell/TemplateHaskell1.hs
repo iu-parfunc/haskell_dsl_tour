@@ -16,10 +16,11 @@ module TemplateHaskell1 where
 
 import Language.Haskell.TH
 
--- First,
+-- First, a regular quote.  Quotes live in the "Q" monad.
 foo :: Q Exp
 foo  = [| \n -> show n |]
 
--- Second,
+-- Second, let's see a typed quotation, which guarantees the generated
+-- code will typecheck at the specified type, just like MetaML.
 baz :: Q (TExp Int)
 baz = [||  3 + 3  ||]
