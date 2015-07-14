@@ -1,18 +1,68 @@
+{-# LANGUAGE DeriveDataTypeable   #-}
 {-# LANGUAGE FlexibleContexts     #-}
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE GADTs                #-}
 {-# LANGUAGE ScopedTypeVariables  #-}
+{-# LANGUAGE StandaloneDeriving   #-}
 {-# LANGUAGE TypeFamilies         #-}
 {-# LANGUAGE TypeOperators        #-}
 {-# LANGUAGE UndecidableInstances #-}
 
--- Surface and representation types
---
-module Sugar where
+module Array.Sugar where
 
 import Type
-import Data.Typeable
+import Array.Data
 
+import Data.Typeable
+import qualified Data.Vector.Unboxed            as U
+
+
+-- Arrays in a unzipped/SOA format
+-- ===============================
+
+-- |Multi-dimensional arrays for array processing.
+--
+-- If device and host memory are separate, arrays will be transferred to the
+-- device when necessary (if possible asynchronously and in parallel with other
+-- tasks) and cached on the device if sufficient memory is available.
+--
+data Array sh e where
+  Array :: (Shape sh, Elt e)
+        => EltRepr sh                 -- extent of dimensions = shape
+        -> ArrayData (EltRepr e)      -- array payload
+        -> Array sh e
+
+deriving instance Typeable Array
+
+-- |Scalars arrays hold a single element
+--
+type Scalar e = Array DIM0 e
+
+-- |Vectors are one-dimensional arrays
+--
+type Vector e = Array DIM1 e
+
+instance Show (Array sh e) where
+  show arr@(Array sh _) =
+    "Array (" ++ show (toElt sh :: sh) ++ ") " ++ show (toList arr)
+
+toList :: Elt e => Array sh e -> [e]
+toList (Array _ adata) = map toElt (U.toList adata)
+
+fromList :: (Shape sh, Elt e) => sh -> [e] -> Array sh e
+fromList sh = Array (fromElt sh) . U.fromList . map fromElt -- . take (size sh)
+
+-- infixl 9 !
+-- (!) :: Array sh e -> sh -> e
+-- (!) (Array sh adata) ix = toElt (adata `V.unsafeIndex` index (toElt sh) ix)
+
+-- newArray :: (Shape sh, Elt e) => sh -> (sh -> e) -> Array sh e
+-- newArray sh f =
+--   Array (fromElt sh) $ V.generate (size sh) (fromElt . f . unindex sh)
+
+
+-- Surface and representation types for array elements
+-- ===================================================
 
 -- The representation types are _closed_. We convert everything into this
 -- format, and the untyped version will work in this format (hopefully).
@@ -34,7 +84,7 @@ type family EltRepr a where
   EltRepr (Any (sh:.Int)) = (EltRepr (Any sh), ())
 
 
-class (Show a, Typeable a, Typeable (EltRepr a)) => Elt a where
+class (ArrayElt (EltRepr a), Typeable (EltRepr a), Show a, Typeable a) => Elt a where
   toElt   :: EltRepr a -> a
   fromElt :: a -> EltRepr a
   eltType :: {- dummy -} a -> TypeR (EltRepr a)
