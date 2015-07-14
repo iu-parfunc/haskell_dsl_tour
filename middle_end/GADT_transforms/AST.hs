@@ -16,11 +16,11 @@ data Idx env t where
 
 data Env env where
   EmptyEnv ::                 Env ()
-  PushEnv  :: a -> Env env -> Env (env, a)
+  PushEnv  :: Env env -> a -> Env (env, a)
 
 prjIdx :: Idx env t -> Env env -> t
-prjIdx ZeroIdx      (PushEnv t _)   = t
-prjIdx (SuccIdx ix) (PushEnv _ env) = prjIdx ix env
+prjIdx ZeroIdx      (PushEnv _ t)   = t
+prjIdx (SuccIdx ix) (PushEnv env _) = prjIdx ix env
 prjIdx _            _               = error "impossible case"
 
 idxToInt :: Idx env t -> Int

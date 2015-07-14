@@ -50,15 +50,18 @@ toList :: Elt e => Array sh e -> [e]
 toList (Array _ adata) = map toElt (U.toList adata)
 
 fromList :: (Shape sh, Elt e) => sh -> [e] -> Array sh e
-fromList sh = Array (fromElt sh) . U.fromList . map fromElt -- . take (size sh)
+fromList sh = Array (fromElt sh) . U.fromList . map fromElt . take (size sh)
 
--- infixl 9 !
--- (!) :: Array sh e -> sh -> e
--- (!) (Array sh adata) ix = toElt (adata `V.unsafeIndex` index (toElt sh) ix)
+infixl 9 !
+(!) :: Array sh e -> sh -> e
+(!) (Array sh adata) ix = toElt (adata U.! toIndex (toElt sh) ix)
 
--- newArray :: (Shape sh, Elt e) => sh -> (sh -> e) -> Array sh e
--- newArray sh f =
---   Array (fromElt sh) $ V.generate (size sh) (fromElt . f . unindex sh)
+newArray :: (Shape sh, Elt e) => sh -> (sh -> e) -> Array sh e
+newArray sh f =
+  Array (fromElt sh) $ U.generate (size sh) (fromElt . f . fromIndex sh)
+
+shape :: Shape sh => Array sh e -> sh
+shape (Array sh _) = toElt sh
 
 
 -- Surface and representation types for array elements
@@ -178,10 +181,20 @@ instance (Elt t, Elt h) => Elt (t:.h) where
   eltType _      = eltType (undefined :: t) `TypeRsnoc` eltType (undefined :: h)
 
 
-class (Elt sh, Elt (Any sh)) => Shape sh
+class (Elt sh, Elt (Any sh)) => Shape sh where
+  size          :: sh -> Int
+  toIndex       :: sh -> sh -> Int
+  fromIndex     :: sh -> Int -> sh
 
-instance Shape Z
-instance Shape sh => Shape (sh:.Int)
+instance Shape Z where
+  size Z        = 1
+  toIndex Z Z   = 0
+  fromIndex Z _ = Z
+
+instance Shape sh => Shape (sh:.Int) where
+  size (sh:.sz)                 = size sh * sz
+  toIndex (sh:.sz) (ix:.i)      = toIndex sh ix * sz + i
+  fromIndex (sh:.sz) i          = fromIndex sh (i `quot` sz) :. i `rem` sz
 
 
 -- Product types
