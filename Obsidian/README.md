@@ -13,7 +13,7 @@ Key aspects of implementation
   * Arrays are implemented as a library on top of deep embedding. 
     pull arrays: 
      data Pull s a = Pull s (W32 -> a)  
-     data Push t s a = Push t ((W32 -> a -> Program Thread ()) -> Program t)
+     data Push t s a = Push s ((W32 -> a -> Program Thread ()) -> Program t ())
     
     The shallow/deep approach. 
   
