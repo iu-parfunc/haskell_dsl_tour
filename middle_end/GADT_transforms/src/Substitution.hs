@@ -13,12 +13,12 @@ import Array.Sugar
 -- | Replace the first variable (ZeroIdx) with the given expression. The
 -- environment shrinks.
 --
-substitute
+inline
     :: Elt t
     => OpenExp (env, s) aenv t
     -> OpenExp env      aenv s
     -> OpenExp env      aenv t
-substitute f g = rebuild (subTop g) f
+inline f g = rebuild (subTop g) f
   where
     subTop :: Elt t => OpenExp env aenv s -> Idx (env, s) t -> OpenExp env aenv t
     subTop s ZeroIdx      = s
@@ -37,7 +37,8 @@ compose (Lam (Body f)) (Lam (Body g)) = Lam . Body $ rebuild (dot g) f
     dot :: Elt c => OpenExp (env, a) aenv b -> Idx (env, b) c -> OpenExp (env, a) aenv c
     dot s ZeroIdx      = s
     dot _ (SuccIdx ix) = Var (SuccIdx ix)
-compose _              _              = error "impossible evaluation"
+
+compose _ _ = error "impossible evaluation"
 
 
 -- SEE: [Renaming and Substitution]
