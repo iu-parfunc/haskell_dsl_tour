@@ -15,7 +15,11 @@ fuseAcc acc =
   case acc of
     Use xs              -> Use xs
     Avar ix             -> Avar ix
-    Alet bnd body       -> error "TODO: Fusion.fuseAcc/Alet"
-    Map f xs            -> error "TODO: Fusion.fuseAcc/Map"
-    Generate sh f       -> error "TODO: Fusion.fuseAcc/Generate"
+    Generate sh f       -> Generate sh f
+    Alet bnd body       -> Alet (fuseAcc bnd) (fuseAcc body)
+    Map f a             ->
+      case fuseAcc a of
+        Map g b         -> Map (f `compose` g) b
+        Generate sh g   -> Generate sh (f `compose` g)
+        a'              -> Map f a'
 
