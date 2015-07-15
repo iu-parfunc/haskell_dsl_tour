@@ -21,10 +21,8 @@ inline
 inline f g = rebuild (subTop g) f
   where
     subTop :: Elt t => OpenExp env aenv s -> Idx (env, s) t -> OpenExp env aenv t
-    subTop _ _ = error "TODO: Substitution.inline"
-    -- HINT: Replace the first variable with the given expression. What
-    --       should we do for the other variables? Notice how the
-    --       environment type shrinks...
+    subTop s ZeroIdx      = s
+    subTop _ (SuccIdx ix) = Var ix
 
 
 -- | Composition of unary functions.
@@ -37,8 +35,8 @@ compose
 compose (Lam (Body f)) (Lam (Body g)) = Lam . Body $ rebuild (dot g) f
   where
     dot :: Elt c => OpenExp (env, a) aenv b -> Idx (env, b) c -> OpenExp (env, a) aenv c
-    dot _ _ = error "TODO: Substitution.compose"
-    -- HINT: Like in 'subTop', replace the top variable with the expression.
+    dot s ZeroIdx      = s
+    dot _ (SuccIdx ix) = Var (SuccIdx ix)
 
 compose _ _ = error "impossible evaluation"
 
@@ -85,9 +83,10 @@ rebuild v = go
     go _ = error "TODO: Substitution.rebuild"
     -- HINT: What happens to our indices when we move under a binder (Let)?
 
-    -- Helper functon to traverse under product types
+    -- Helper function to traverse under product types
     goP :: Prod (OpenExp env aenv) p -> Prod (OpenExp env' aenv) p
-    goP _ = error "TODO: Substitution.rebuild"
+    goP EmptyProd      = EmptyProd
+    goP (PushProd p e) = goP p `PushProd` go e
 
 
 -- NOTE: [Renaming and Substitution]
