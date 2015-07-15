@@ -11,6 +11,42 @@ import Interpreter
 import Fusion
 
 
+-- EXERCISES
+-- =========
+--
+-- Try to get the following expressions to fuse! You will need to
+-- complete the definitions in Substitution.hs and Fusion.hs.
+--
+-- You can evaluate the expressions with 'run'.
+--
+
+-- map/map fusion
+--
+ex01 :: Acc (Vector Float)
+ex01
+  = fuseAcc
+  $ Map f2 (Map f1 a3)
+
+
+-- map/generate fusion
+--
+ex02 :: Acc (Array DIM2 Float)
+ex02
+  = fuseAcc
+  $ Map f2 (Map f1 (Generate (constant (Z:.2:.2)) f5))
+
+
+-- removing obstacles to fusion
+--
+ex03 :: Acc (Array DIM1 Float)
+ex03
+  = fuseAcc
+  $ Map f2 (Alet a3 (Map f1 (Avar ZeroIdx)))
+
+
+-- Example program fragments: construct your own tests!
+-- ====================================================
+
 -- Array computations
 
 a0 :: Vector Int
@@ -37,6 +73,7 @@ a6 = Map f1 a3
 a7 :: Acc (Vector Float)
 a7 = Map f2 a6
 
+-- TODO: map/map fusion
 a8 :: Acc (Vector Float)
 a8 = Map f2
    $ Map f1 a3
@@ -44,6 +81,7 @@ a8 = Map f2
 a9 :: Acc (Array DIM2 Int)
 a9 = Generate (constant (Z:.2:.2)) f5
 
+-- TODO: map/generate fusion
 a10 :: Acc (Array DIM2 Float)
 a10 = Map f2
     $ Map f1
