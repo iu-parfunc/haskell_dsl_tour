@@ -8,4 +8,4 @@ import qualified FrameworkHs.GenGrammars.NoLets       as T
 
 removeLet :: S.Expr -> T.Expr
 removeLet e0 =
-  _finishme01
+  error "finishme -- removeLet"
