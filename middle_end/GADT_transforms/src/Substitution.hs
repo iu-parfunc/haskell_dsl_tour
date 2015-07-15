@@ -87,6 +87,7 @@ rebuild v = go
     go (If p t e)    = If (go p) (go t) (go e)
     go (Prj ix p)    = Prj ix (go p)
     go (Prod p)      = Prod (goP p)
+    go (Index a ix)  = Index a (go ix)
 
     goP :: Prod (OpenExp env aenv) p -> Prod (OpenExp env' aenv) p
     goP EmptyProd      = EmptyProd

@@ -120,6 +120,12 @@ data OpenExp env aenv t where
                 -> OpenExp env aenv t
                 -> OpenExp env aenv t
 
+  Index         :: (Shape sh, Elt e)
+                => Idx aenv (Array sh e)
+                -> OpenExp env aenv sh
+                -> OpenExp env aenv e
+
+
 data PrimFun f where
   PrimAdd       :: NumType a -> PrimFun ((a,a) -> a)
   PrimMul       :: NumType a -> PrimFun ((a,a) -> a)
