@@ -20,26 +20,32 @@ import Fusion
 -- You can evaluate the expressions with 'run'.
 --
 
+-- function composition
+--
+ex01 :: Fun () (Int -> Float)
+ex01 = f2 `compose` f1
+
+
 -- map/map fusion
 --
-ex01 :: Acc (Vector Float)
-ex01
+ex02 :: Acc (Vector Float)
+ex02
   = fuseAcc
   $ Map f2 (Map f1 a3)
 
 
 -- map/generate fusion
 --
-ex02 :: Acc (Array DIM2 Float)
-ex02
+ex03 :: Acc (Array DIM2 Float)
+ex03
   = fuseAcc
   $ Map f2 (Map f1 (Generate (constant (Z:.2:.2)) f5))
 
 
 -- removing obstacles to fusion
 --
-ex03 :: Acc (Array DIM1 Float)
-ex03
+ex04 :: Acc (Array DIM1 Float)
+ex04
   = fuseAcc
   $ Map f2 (Alet a3 (Map f1 (Avar ZeroIdx)))
 
