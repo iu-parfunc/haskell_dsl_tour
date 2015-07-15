@@ -47,9 +47,9 @@ compose _ _ = error "impossible evaluation"
 -- SEE: [Weakening]
 --
 class Syntactic f where
-  varIn  :: Elt t => Idx env t    -> f env env' t
-  expOut :: Elt t => f env env' t -> OpenExp env env' t
-  weaken :: Elt t => f env env' t -> f (env, s) env' t
+  varIn  :: Elt t => Idx env t    -> f env aenv t
+  expOut :: Elt t => f env aenv t -> OpenExp env aenv t
+  weaken :: Elt t => f env aenv t -> f (env, s) aenv t
 
 
 -- Wrapper around indices such that Syntactic elements have the same kind.
