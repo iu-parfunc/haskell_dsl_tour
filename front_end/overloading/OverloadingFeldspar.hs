@@ -14,14 +14,14 @@ x = 3 + 4
 type EBool e = Exp e (Int -> Int -> Int)
 
 true :: EBool e
-true = Abs Int (Abs Int (Var (Suc Zro)))
+true = error "Finishme - true"
 
 false :: EBool e
-false = Abs Int (Abs Int (Var Zro))
+false = error "Finishme - false"
 
 ifThenElse :: EBool e -> Exp e Int -> Exp e Int -> Exp e Int
 ifThenElse b e1 e2 =
-  App (App b e1) e2
+  error "Finishme - ifThenElse"
 
 y :: Exp () Int
 y = if true
