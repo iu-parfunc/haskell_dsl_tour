@@ -10,7 +10,7 @@ import AST
 import Array.Sugar
 
 
--- Replace the first variable (ZeroIdx) with the given expression. The
+-- | Replace the first variable (ZeroIdx) with the given expression. The
 -- environment shrinks.
 --
 substitute
@@ -25,7 +25,7 @@ substitute f g = rebuild (subTop g) f
     subTop _ (SuccIdx ix) = Var ix
 
 
--- Composition of unary functions.
+-- | Composition of unary functions.
 --
 compose
     :: Elt c
@@ -40,12 +40,18 @@ compose (Lam (Body f)) (Lam (Body g)) = Lam . Body $ rebuild (dot g) f
 compose _              _              = error "impossible evaluation"
 
 
+-- SEE: [Renaming and Substitution]
+-- SEE: [Weakening]
+--
 class Syntactic f where
   varIn  :: Elt t => Idx env t    -> f env env' t
   expOut :: Elt t => f env env' t -> OpenExp env env' t
   weaken :: Elt t => f env env' t -> f (env, s) env' t
 
 
+-- Wrapper around indices such that Syntactic elements have the same kind.
+-- Here, the second environment 'aenv' is ignored.
+--
 newtype Idx' env aenv t = I { unI :: Idx env t }
 
 instance Syntactic Idx' where
@@ -86,3 +92,42 @@ rebuild v = go
     goP EmptyProd      = EmptyProd
     goP (PushProd p e) = goP p `PushProd` go e
 
+
+-- NOTE: [Renaming and Substitution]
+--
+-- To do things like renaming and substitution, we need some operation on
+-- variables that we push structurally through terms, applying to each variable.
+-- We have a type preserving but environment changing operation:
+--
+--   v :: forall t. Idx env t -> f env' aenv t
+--
+-- The crafty bit is that 'f' might represent variables (for renaming) or terms
+-- (for substitutions). The demonic forall, --- which is to say that the
+-- quantifier is in a position which gives us obligation, not opportunity ---
+-- forces us to respect type: when pattern matching detects the variable we care
+-- about, happily we discover that it has the type we must respect. The demon is
+-- not so free to mess with us as one might fear at first.
+--
+-- We then lift this to an operation which traverses terms and rebuild them
+-- after applying 'v' to the variables:
+--
+--   rebuild v :: OpenExp env aenv t -> OpenExp env' aenv t
+--
+-- The Syntactic class tells us what we need to know about 'f' if we want to be
+-- able to rebuild terms. In essence, the crucial functionality is to propagate
+-- a class of operations on variables that is closed under shifting.
+--
+
+-- NOTE: [Weakening]
+--
+-- Weakening is something we usually take for granted: every time you learn a
+-- new word, old sentences still make sense. If a conclusion is justified by a
+-- hypothesis, it is still justified if you add more hypotheses. Similarly, a
+-- term remains in scope if you bind more (fresh) variables. Weakening is the
+-- operation of shifting things from one scope to a larger scope in which new
+-- things have become meaningful, but no old things have vanished.
+--
+-- When we use a named representation (or HOAS) we get weakening for free. But
+-- in the de Bruijn representation weakening takes work: you have to shift all
+-- variables references to make room for the new bindings.
+--
