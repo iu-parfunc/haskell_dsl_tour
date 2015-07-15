@@ -1,0 +1,61 @@
+Name:                nanopass-sample
+Version:             0.0.1
+Synopsis:            A peek at part of the P423 class compiler framework.
+Author:              Ryan R. Newton
+Maintainer:          rrnewton@gmail.com
+Category:            Language
+Build-type:          Simple
+
+-- Constraint on the version of Cabal needed to build this package:
+Cabal-version:       >=1.10
+
+Library
+  Exposed-modules:
+--      CompilerHs.Compile
+      FrameworkHs.Helpers
+--      FrameworkHs.Driver
+      FrameworkHs.Prims
+--      FrameworkHs.Testing
+      FrameworkHs.SExpReader.LispData
+      FrameworkHs.SExpReader.Parser
+--      FrameworkHs.ParseL01
+--      FrameworkHs.GenGrammars.L01VerifyScheme
+
+      FrameworkHs.GenGrammars.L00VerifyScheme
+      FrameworkHs.GenGrammars.L01ParseScheme
+      FrameworkHs.GenGrammars.L02ConvertComplexDatum
+      FrameworkHs.GenGrammars.L03UncoverAssigned
+      FrameworkHs.GenGrammars.L04PurifyLetrec
+      FrameworkHs.GenGrammars.L05ConvertAssignments
+      FrameworkHs.GenGrammars.L07RemoveAnonymousLambda
+      FrameworkHs.GenGrammars.L08SanitizeBindings
+      FrameworkHs.GenGrammars.L09UncoverFree
+      FrameworkHs.GenGrammars.L10ConvertClosures
+      FrameworkHs.GenGrammars.L12UncoverWellKnown
+      FrameworkHs.GenGrammars.L15IntroduceProcedurePrimitives
+      FrameworkHs.GenGrammars.L17LiftLetrec
+      FrameworkHs.GenGrammars.L18NormalizeContext
+      FrameworkHs.GenGrammars.L19SpecifyRepresentation
+      FrameworkHs.GenGrammars.L20UncoverLocals
+      FrameworkHs.GenGrammars.L22VerifyUil
+      FrameworkHs.GenGrammars.L23RemoveComplexOpera
+      FrameworkHs.GenGrammars.L24FlattenSet
+      FrameworkHs.GenGrammars.L25ImposeCallingConventions
+      FrameworkHs.GenGrammars.L26ExposeAllocationPointer
+      FrameworkHs.GenGrammars.L27UncoverFrameConflict
+      FrameworkHs.GenGrammars.L28PreAssignFrame
+      FrameworkHs.GenGrammars.L29AssignNewFrame
+      FrameworkHs.GenGrammars.L30FinalizeFrameLocations
+      FrameworkHs.GenGrammars.L32UncoverRegisterConflict
+      FrameworkHs.GenGrammars.L33AssignRegisters
+      FrameworkHs.GenGrammars.L35DiscardCallLive
+      FrameworkHs.GenGrammars.L36FinalizeLocations
+      FrameworkHs.GenGrammars.L37ExposeFrameVar
+      FrameworkHs.GenGrammars.L38ExposeMemoryOperands
+      FrameworkHs.GenGrammars.L39ExposeBasicBlocks
+      FrameworkHs.GenGrammars.L41FlattenProgram
+
+  default-language:    Haskell2010
+  build-depends:
+      base == 4.*, deepseq == 1.3.*, vector >= 0.10,  containers, process, pretty,
+      symbol, mtl >= 2, parsec >=3, bytestring >= 0.10, blaze-builder

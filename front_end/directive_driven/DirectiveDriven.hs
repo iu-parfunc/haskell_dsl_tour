@@ -19,7 +19,7 @@ may look like in Haskell.
 
 -}
 
-module DirectiveDriven where
+module Main where
 
 import Helpers.Annotations
 
@@ -64,3 +64,5 @@ $(myLangDefs
 
 -- In this case the package "th-desugar" (used by singletons) may come
 -- in handy to reduce the number of constructs we need to deal with.
+
+main = return ()
