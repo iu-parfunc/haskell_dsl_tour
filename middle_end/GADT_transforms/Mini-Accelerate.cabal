@@ -7,14 +7,10 @@ cabal-version:          >=1.10
 
 library
   default-language:     Haskell2010
-  exposed-modules:
-                        AST Interpreter Pretty Test Type
+  exposed-modules:      AST Interpreter Pretty Test Type
   build-depends:
       base              >= 4.7 && < 4.9
     , wl-pprint         >= 1.2
-    , ghc-prim
-    , deepseq
     , vector            >= 0.10
-    , split
 
 --  ghc-options:          -Wall -O2
