@@ -8,6 +8,7 @@ import Pretty ()
 import Array.Sugar
 import Substitution
 import Interpreter
+import Fusion
 
 
 -- Array computations
@@ -36,6 +37,22 @@ a6 = Map f1 a3
 a7 :: Acc (Vector Float)
 a7 = Map f2 a6
 
+a8 :: Acc (Vector Float)
+a8 = Map f2
+   $ Map f1 a3
+
+a9 :: Acc (Array DIM2 Int)
+a9 = Generate (constant (Z:.2:.2)) f5
+
+a10 :: Acc (Array DIM2 Float)
+a10 = Map f2
+    $ Map f1
+    $ a9
+
+a11 :: Acc (Array DIM2 Float)
+a11 = Alet a10
+    $ Generate (constant (Z:.2:.2)) f4
+
 
 -- Scalar functions
 
@@ -49,6 +66,12 @@ f2 = Lam $ Body $ PrimApp PrimToFloat (Var ZeroIdx)
 
 f3 :: OpenFun env aenv (Int -> Float)
 f3 = f2 `compose` f1
+
+f4 :: Elt e => OpenFun env (aenv, Array DIM2 e) (DIM2 -> e)
+f4 = Lam $ Body $ Index ZeroIdx (Var ZeroIdx)
+
+f5 :: Shape sh => OpenFun env aenv (sh -> Int)
+f5 = Lam $ Body $ constant 0
 
 
 -- Scalar expressions
