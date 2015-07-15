@@ -40,6 +40,8 @@ roundtrip name gadt = do
     ADTInterp.Rgt a -> printf "  Evaled: %s\n" (show a)
     _               -> printf " Failed to evaluate Expression: %s\n" (show adt)
 
-foo, bar :: IO ()
-foo = roundtrip "foo" test1
-bar = roundtrip "bar" test2
+-- foo :: IO ()
+-- foo = roundtrip "foo" test1
+
+runTest :: IO ()
+runTest = roundtrip "bar" test2
