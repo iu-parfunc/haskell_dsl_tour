@@ -10,8 +10,11 @@
 
 {-# OPTIONS_GHC -fno-warn-missing-methods #-}
 
--- | A minimal Feldspar core language implementation. The intention of this module is to demonstrate
--- how to quickly make a language prototype using Syntactic.
+-- | A minimal Feldspar core language implementation. The intention of
+-- this module is to demonstrate how to quickly make a language
+-- prototype using Syntactic.
+--
+-- By Emil Axelsson
 
 module NanoFeldspar where
 
@@ -362,3 +365,7 @@ matMul a b = forEach a $ \a' ->
                forEach (transpose b) $ \b' ->
                  scProd a' b'
 
+
+----------------------------------------
+
+runTest = undefined

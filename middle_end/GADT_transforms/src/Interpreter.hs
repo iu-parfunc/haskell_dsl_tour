@@ -50,6 +50,7 @@ evalOpenExp env aenv = go
     go (Prj ix p)       = prj ix (fromProd (go p))
     go (Prod p)         = toProd (prod p)
     go (PrimApp f x)    = prim f (go x)
+    go (Index a ix)     = prjIdx a aenv ! go ix
     go (If p a b)
       | go p            = go a
       | otherwise       = go b
