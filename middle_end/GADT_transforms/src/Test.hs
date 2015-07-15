@@ -37,6 +37,7 @@ a6 = Map f1 a3
 a7 :: Acc (Vector Float)
 a7 = Map f2 a6
 
+-- TODO: map/map fusion
 a8 :: Acc (Vector Float)
 a8 = Map f2
    $ Map f1 a3
@@ -44,6 +45,7 @@ a8 = Map f2
 a9 :: Acc (Array DIM2 Int)
 a9 = Generate (constant (Z:.2:.2)) f5
 
+-- TODO: map/generate fusion
 a10 :: Acc (Array DIM2 Float)
 a10 = Map f2
     $ Map f1
