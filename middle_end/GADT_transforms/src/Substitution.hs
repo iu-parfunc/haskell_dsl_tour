@@ -21,8 +21,10 @@ inline
 inline f g = rebuild (subTop g) f
   where
     subTop :: Elt t => OpenExp env aenv s -> Idx (env, s) t -> OpenExp env aenv t
-    subTop s ZeroIdx      = s
-    subTop _ (SuccIdx ix) = Var ix
+    subTop _ _ = error "TODO: Substitution.inline"
+    -- HINT: Replace the first variable with the given expression. What
+    --       should we do for the other variables? Notice how the
+    --       environment type shrinks...
 
 
 -- | Composition of unary functions.
@@ -35,8 +37,8 @@ compose
 compose (Lam (Body f)) (Lam (Body g)) = Lam . Body $ rebuild (dot g) f
   where
     dot :: Elt c => OpenExp (env, a) aenv b -> Idx (env, b) c -> OpenExp (env, a) aenv c
-    dot s ZeroIdx      = s
-    dot _ (SuccIdx ix) = Var (SuccIdx ix)
+    dot _ _ = error "TODO: Substitution.compose"
+    -- HINT: Like in 'subTop', replace the top variable with the expression.
 
 compose _ _ = error "impossible evaluation"
 
@@ -70,8 +72,7 @@ shift :: (Syntactic f, Elt t)
       => (forall t'. Elt t' => Idx env t' -> f env' aenv t')
       -> Idx' (env,  s) aenv t
       -> f    (env', s) aenv t
-shift _ (I ZeroIdx)      = varIn ZeroIdx
-shift v (I (SuccIdx ix)) = weaken (v ix)
+shift _ _ = error "TODO: Substitution.shift"
 
 
 rebuild :: forall env env' aenv f t. Syntactic f
@@ -81,18 +82,12 @@ rebuild :: forall env env' aenv f t. Syntactic f
 rebuild v = go
   where
     go :: OpenExp env aenv s -> OpenExp env' aenv s
-    go (Let a b)     = Let (go a) (rebuild (shift v . I) b)
-    go (Var ix)      = expOut (v ix)
-    go (Const c)     = Const c
-    go (PrimApp f x) = PrimApp f (go x)
-    go (If p t e)    = If (go p) (go t) (go e)
-    go (Prj ix p)    = Prj ix (go p)
-    go (Prod p)      = Prod (goP p)
-    go (Index a ix)  = Index a (go ix)
+    go _ = error "TODO: Substitution.rebuild"
+    -- HINT: What happens to our indices when we move under a binder (Let)?
 
+    -- Helper functon to traverse under product types
     goP :: Prod (OpenExp env aenv) p -> Prod (OpenExp env' aenv) p
-    goP EmptyProd      = EmptyProd
-    goP (PushProd p e) = goP p `PushProd` go e
+    goP _ = error "TODO: Substitution.rebuild"
 
 
 -- NOTE: [Renaming and Substitution]
