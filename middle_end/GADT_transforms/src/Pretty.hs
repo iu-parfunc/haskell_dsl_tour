@@ -36,7 +36,7 @@ prettyAcc alvl wrap = pp
     pp (Alet a b)       =
       let x  = char 'a' <> int alvl
           a' = prettyAcc alvl     id a
-          b' = prettyAcc (alvl+1) id a
+          b' = prettyAcc (alvl+1) id b
 
           isLet Alet{} = True
           isLet _      = False
