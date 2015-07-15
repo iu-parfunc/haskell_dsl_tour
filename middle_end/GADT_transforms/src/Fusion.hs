@@ -15,11 +15,10 @@ fuseAcc acc =
   case acc of
     Use xs              -> Use xs
     Avar ix             -> Avar ix
-    Generate sh f       -> Generate sh f
-    Alet bnd body       -> Alet (fuseAcc bnd) (fuseAcc body)
-    Map f a             ->
-      case fuseAcc a of
-        Map g b         -> Map (f `compose` g) b
-        Generate sh g   -> Generate sh (f `compose` g)
-        a'              -> Map f a'
+    Generate sh f       -> error "TODO: fuseAcc/Generate"
+    Alet bnd body       -> error "TODO: fuseAcc/Alet"
+    Map f a             -> error "TODO: fuseAcc/Map"
+    -- HINT:
+    --  1. Use the helper functions defined in Substitution in order to combine expressions.
+    --  2. When you spot a case for fusion, don't forget to traverse down to the subterms!
 
