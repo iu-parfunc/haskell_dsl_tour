@@ -17,10 +17,6 @@ import Text.PrettyPrint.Leijen
 -- with integer constants, and addition.
 -- Philip Wadler and Shayan Najd, November 2013
 
--- ERASER: Exp, e: checked, a: synthesized
--- ERASER: Var, e: checked, a: synthesized
--- ERASER: Typ, a: synthesized
-
 -- Variables
 type role Var nominal nominal
 data Var e a where
@@ -59,16 +55,15 @@ instance Elt Int where
 instance (Elt a, Elt b) => Elt (a -> b) where
   eltType = Arr eltType eltType
 
-
 instance Num (Exp env Int) where
-  x + y         = Add x y
-  x * y         = Mul x y
-  fromInteger   = Con . fromInteger
+  (+) = Add
+  (*) = Mul
+  fromInteger n = Con (fromInteger n)
+
   --
   (-)           = error "Exp.(-)"
   abs           = error "Exp.abs"
   signum        = error "Exp.signum"
-
 
 -- Helpers
 -- -------
