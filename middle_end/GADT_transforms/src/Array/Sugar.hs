@@ -9,7 +9,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | Mapping idiomatic Haskell types onto (unzipped) mini-accelerate Arrays
-
+--
 module Array.Sugar where
 
 import Type
@@ -19,8 +19,8 @@ import Data.Typeable
 import qualified Data.Vector.Unboxed            as U
 
 
--- Arrays in a unzipped/SOA format
--- ===============================
+-- Arrays in an unzipped/SOA format
+-- ================================
 
 -- |Multi-dimensional arrays for array processing.
 --
@@ -182,6 +182,9 @@ instance (Elt t, Elt h) => Elt (t:.h) where
   fromElt (t:.h) = (fromElt t, fromElt h)
   eltType _      = eltType (undefined :: t) `TypeRsnoc` eltType (undefined :: h)
 
+
+-- Operations on Shapes
+-- --------------------
 
 class (Elt sh, Elt (Any sh)) => Shape sh where
   size          :: sh -> Int

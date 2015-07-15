@@ -36,7 +36,7 @@ prettyAcc alvl wrap = pp
     pp (Alet a b)       =
       let x  = char 'a' <> int alvl
           a' = prettyAcc alvl     id a
-          b' = prettyAcc (alvl+1) id a
+          b' = prettyAcc (alvl+1) id b
 
           isLet Alet{} = True
           isLet _      = False
@@ -78,6 +78,9 @@ prettyExp lvl alvl wrap = pp
     ppE :: OpenExp env aenv s -> Doc
     ppE = prettyExp lvl alvl parens
 
+    ppA :: OpenAcc aenv a -> Doc
+    ppA = prettyAcc alvl parens
+
     pp :: OpenExp env aenv t -> Doc
     pp (Var ix)         = char 'x' <> int (lvl - idxToInt ix - 1)
     pp (Const c)        = text (show (toElt c :: t))
@@ -112,6 +115,9 @@ prettyExp lvl alvl wrap = pp
 
     pp (If p t e) =
       hang 3 $ vcat [ text "if"   <+> ppE p, text "then" <+> ppE t, text "else" <+> ppE e ]
+
+    pp (Index arr ix) =
+      wrap $ cat [ ppA (Avar arr), char '!', ppE ix ]
 
 
 instance Show (OpenAcc aenv a) where
