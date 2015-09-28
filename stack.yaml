@@ -1,0 +1,14 @@
+flags: {}
+packages:
+- front_end/directive_driven/
+- front_end/overloading/
+- middle_end/GADT_transforms/
+- middle_end/multi-level_AST/
+- middle_end/nanopass/course_example/
+- middle_end/nanopass/exercise/
+- middle_end/syntactic/
+extra-deps:
+- syntactic-2.1
+- data-hash-0.2.0.1
+- wl-pprint-1.2
+resolver: lts-2.22
